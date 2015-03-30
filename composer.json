@@ -1,0 +1,23 @@
+{
+    "name": "skizu/simpleapi",
+    "type": "library",
+    "description": "Simple api wrapper with easy caching and throttling",
+    "keywords": ["laravel", "php", "api", "wrapper"],
+    "license": "MIT",
+    "require": {
+	"php": ">=5.4.0",
+	"illuminate/support": "~5",
+	"guzzlehttp/guzzle": "~5.2",
+    },
+    "autoload": {    
+        "psr-4": {
+            "Skizu\\SimpleAPI": "src/"
+        }
+    },  
+    "authors": [
+        {
+            "name": "Skizu",
+            "email": "email@danielhunt.info"
+        }
+    ]
+}
