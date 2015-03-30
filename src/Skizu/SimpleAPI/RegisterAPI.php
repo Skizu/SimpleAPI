@@ -1,6 +1,6 @@
 <?php
 
-namespace Skizu\SimpleAPI;
+namespace SimpleAPI;
 
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
@@ -104,6 +104,7 @@ class RegisterAPI extends Controller
                 return $response->json();
                 break;
 
+            case 'application/xml':
             case 'text/xml':
                 return json_decode(json_encode($response->xml()), true);
                 break;
