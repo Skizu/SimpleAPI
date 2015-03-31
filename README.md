@@ -38,3 +38,5 @@ This library works by throwing exceptions which you would need to catch.
 - Invalid configuration `ConfigException`
 - Throlled API `ThrottleException`
 - Request error `RequestException`
+- Response error `ResponseException`
+- Server error `ServerException`

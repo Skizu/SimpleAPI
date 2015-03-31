@@ -18,6 +18,14 @@ Class RequestException extends \Exception
 {
 }
 
+Class ResponseException extends \Exception
+{
+}
+
+Class ServerException extends \Exception
+{
+}
+
 class RegisterAPI extends Controller
 {
     const THROTTLE_LIMIT = 100;
@@ -79,8 +87,15 @@ class RegisterAPI extends Controller
             if ($search) $request->setQuery($search);
 
             return $client->send($request);
-        } catch (GuzzleRequestException $e) {
+        } catch (GuzzleHttp\Exception\RequestException $e) {
             throw new RequestException($e->getMessage());
+        } catch (GuzzleHttp\Exception\ClientErrorResponseException $e) {
+            throw new ResponseException($e->getMessage());
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            throw new ResponseException($e->getMessage());
+        } catch (GuzzleHttp\Exception\ServerException $e) {
+        } catch (GuzzleServerException $e) {
+            throw new ServerException($e->getMessage());
         }
     }
 
