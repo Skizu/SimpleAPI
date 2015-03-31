@@ -94,7 +94,6 @@ class RegisterAPI extends Controller
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             throw new ResponseException($e->getMessage());
         } catch (GuzzleHttp\Exception\ServerException $e) {
-        } catch (GuzzleServerException $e) {
             throw new ServerException($e->getMessage());
         }
     }
