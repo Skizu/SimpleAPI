@@ -4,7 +4,6 @@ namespace SimpleAPI;
 
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
 use Cache;
 
 Class ThrottleException extends \Exception
@@ -15,7 +14,7 @@ Class ConfigException extends \Exception
 {
 }
 
-Class RequestException extends GuzzleRequestException
+Class RequestException extends \Exception
 {
 }
 
