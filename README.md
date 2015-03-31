@@ -30,3 +30,11 @@ $query = [
 
 $result = $api->action('baz')->lookup($query);
 ```
+
+### Error handling
+
+This library works by throwing exceptions which you would need to catch.
+
+- Invalid configuration `ConfigException`
+- Throlled API `ThrottleException`
+- Request error `RequestException`

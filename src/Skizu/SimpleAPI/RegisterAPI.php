@@ -4,13 +4,18 @@ namespace SimpleAPI;
 
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
+GuzzleHttp\Exception\RequestException as GuzzleRequestException;
 use Cache;
 
-Class LookupAPIThrottleException extends \Exception
+Class ThrottleException extends \Exception
 {
 }
 
-Class LookupAPIConfigException extends \Exception
+Class ConfigException extends \Exception
+{
+}
+
+Class RequestException extends GuzzleRequestException
 {
 }
 
@@ -40,7 +45,7 @@ class RegisterAPI extends Controller
         $this->queries_key = $this->api . '.count';
 
         if (!isset($this->api_url) || empty($this->api_url)) {
-            throw new LookupAPIConfigException("Unable to find: $api_url_key");
+            throw new ConfigException("Unable to find: $api_url_key");
         }
     }
 
@@ -68,18 +73,22 @@ class RegisterAPI extends Controller
 
     private function queryAPI($search)
     {
-        $client = new Client();
+        try {
+            $client = new Client();
 
-        $request = $client->createRequest($this->method, $this->api_url);
-        if ($search) $request->setQuery($search);
+            $request = $client->createRequest($this->method, $this->api_url);
+            if ($search) $request->setQuery($search);
 
-        return $client->send($request);
+            return $client->send($request);
+        } catch (GuzzleRequestException $e) {
+            throw new RequestException($e->getMessage());
+        }
     }
 
     private function throttleCheck()
     {
         if ($this->limit < $this->queries()) {
-            throw new LookupAPIThrottleException('API throttled due to flood of requests');
+            throw new ThrottleException('API throttled due to flood of requests');
         }
     }
 
