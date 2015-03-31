@@ -100,7 +100,7 @@ class RegisterAPI extends Controller
 
     private function throttleCheck()
     {
-        if ($this->limit < $this->queries()) {
+        if ($this->limit <= $this->queries()) {
             throw new ThrottleException('API throttled due to flood of requests');
         }
         Cache::put($this->queries_key, $this->queries() + 1, $this->cache_time);
