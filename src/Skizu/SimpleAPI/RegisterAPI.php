@@ -49,7 +49,7 @@ class RegisterAPI extends Controller
         $this->limit = env($this->api . '_API_THROTTLE_LIMIT', self::THROTTLE_LIMIT);
         $this->storage_time = env($this->api . '_API_STORAGE_TIME', self::STORAGE_TIME);
         $this->cache_time = env($this->api . '_API_CACHE_TIME', self::CACHE_TIME);
-        $this->queries_key = $this->api . '.count';
+        $this->queries_key = $this->api . '_COUNT';
 
         if (!isset($this->api_url) || empty($this->api_url)) {
             throw new ConfigException("Unable to find: $api_url_key");
@@ -103,6 +103,7 @@ class RegisterAPI extends Controller
         if ($this->limit < $this->queries()) {
             throw new ThrottleException('API throttled due to flood of requests');
         }
+        Cache::put($this->queries_key, $this->queries() + 1, $this->cache_time);
     }
 
     private function cacheKey($search)
@@ -113,8 +114,7 @@ class RegisterAPI extends Controller
     private function store($response)
     {
         $result = $this->detectType($response);
-        Cache::add($this->cache_key, $result, $this->storage_time);
-        Cache::add($this->queries_key, $this->queries() + 1, $this->cache_time);
+        Cache::put($this->cache_key, $result, $this->storage_time);
 
         return $result;
     }
