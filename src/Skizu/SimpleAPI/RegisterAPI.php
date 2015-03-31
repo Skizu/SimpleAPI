@@ -22,7 +22,7 @@ Class ResponseException extends \Exception
 {
 }
 
-Class ServerException extends \Exception
+Class ServerException extends ResponseException
 {
 }
 
@@ -87,14 +87,14 @@ class RegisterAPI extends Controller
             if ($search) $request->setQuery($search);
 
             return $client->send($request);
-        } catch (GuzzleHttp\Exception\RequestException $e) {
-            throw new RequestException($e->getMessage());
-        } catch (GuzzleHttp\Exception\ClientErrorResponseException $e) {
-            throw new ResponseException($e->getMessage());
-        } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            throw new ResponseException($e->getMessage());
-        } catch (GuzzleHttp\Exception\ServerException $e) {
+        } catch (\GuzzleHttp\Exception\ServerException $e) {
             throw new ServerException($e->getMessage());
+        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
+            throw new ResponseException($e->getMessage());
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            throw new RequestException($e->getMessage());
+        } catch (\GuzzleHttp\Exception\ClientErrorResponseException $e) {
+            throw new ResponseException($e->getMessage());
         }
     }
 
