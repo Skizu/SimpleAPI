@@ -2,9 +2,9 @@
 
 namespace SimpleAPI;
 
-use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
-use Cache;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Cache;
 
 Class ThrottleException extends \Exception
 {
