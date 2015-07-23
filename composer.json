@@ -1,23 +1,31 @@
 {
-    "name": "skizu/simpleapi",
-    "type": "library",
-    "description": "Simple api wrapper with easy caching and throttling",
-    "keywords": ["laravel", "php", "api", "wrapper"],
-    "license": "MIT",
-    "require": {
-	"php": ">=5.4.0",
-    "laravel/framework": "~5",
-	"guzzlehttp/guzzle": "~5.2"
-    },
-    "autoload": {    
-        "psr-4": {
-            "SimpleAPI\\": "src/"
-        }
-    },  
-    "authors": [
-        {
-            "name": "Skizu",
-            "email": "email@danielhunt.info"
-        }
-    ]
+  "name": "skizu/simpleapi",
+  "type": "library",
+  "description": "Simple api wrapper with easy caching and throttling",
+  "keywords": [
+    "laravel",
+    "php",
+    "api",
+    "wrapper"
+  ],
+  "license": "MIT",
+  "require": {
+    "php": ">=5.4.0",
+    "guzzlehttp/guzzle": "~5.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "SimpleAPI\\": "src/"
+    }
+  },
+  "suggest": {
+    "laravel/framework": "Required to use Cache without definition",
+    "lumen/framework": "Alternatively required to use Cache without definition"
+  },
+  "authors": [
+    {
+      "name": "Skizu",
+      "email": "email@danielhunt.info"
+    }
+  ]
 }
