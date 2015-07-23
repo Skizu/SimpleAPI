@@ -38,13 +38,21 @@ class RegisterAPI extends Controller
     private $storage_time;
     private $cache_key;
     private $cache_time;
+    private $auth_user;
+    private $auth_key;
 
-    public function __construct($api)
+    public function __construct($api, $auth = false)
     {
         $this->api = strtoupper($api);
 
         $api_url_key = $this->api . '_API_URL';
         $this->api_url = env($api_url_key);
+
+        $api_user = $this->api . '_API_USER';
+        $this->auth_user = env($api_user);
+
+        $api_key = $this->api . '_API_KEY';
+        $this->auth_key = env($api_key);
 
         $this->limit = env($this->api . '_API_THROTTLE_LIMIT', self::THROTTLE_LIMIT);
         $this->storage_time = env($this->api . '_API_STORAGE_TIME', self::STORAGE_TIME);
@@ -54,21 +62,32 @@ class RegisterAPI extends Controller
         if (!isset($this->api_url) || empty($this->api_url)) {
             throw new ConfigException("Unable to find: $api_url_key");
         }
+
+        if ($auth) {
+            if (!isset($this->auth_user) || empty($this->api_user)) {
+                throw new ConfigException("Unable to find: $api_user");
+            } elseif (!isset($this->auth_key) || empty($this->api_key)) {
+                throw new ConfigException("Unable to find: $api_key");
+            }
+        }
+
     }
 
     public function action($action)
     {
         $this->api_url .= $action;
+
         return $this;
     }
 
-    public function lookup($search = NULL, $method = 'GET')
+    public function lookup($search = null, $method = 'GET')
     {
         $this->cache_key = $this->cacheKey($search);
         $this->method = $method;
 
         return Cache::get($this->cache_key, function () use ($method, $search) {
             $this->throttleCheck();
+
             return $this->start($search);
         });
     }
@@ -81,10 +100,19 @@ class RegisterAPI extends Controller
     private function queryAPI($search)
     {
         try {
-            $client = new Client();
+            $client = new Client([
+                'defaults' => [
+                    'auth' => [
+                        $this->auth_user,
+                        $this->auth_key,
+                    ]
+                ]
+            ]);
 
             $request = $client->createRequest($this->method, $this->api_url);
-            if ($search) $request->setQuery($search);
+            if ($search) {
+                $request->setQuery($search);
+            }
 
             return $client->send($request);
         } catch (\GuzzleHttp\Exception\ServerException $e) {
