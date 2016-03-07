@@ -75,9 +75,7 @@ class RegisterAPI extends Controller
 
     public function action($action)
     {
-        $this->api_url .= $action;
-
-        return $this;
+        return $this->api_url . $action;
     }
 
     public function lookup($search = null, $method = 'GET')
